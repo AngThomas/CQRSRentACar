@@ -2,18 +2,18 @@
 
 namespace App\Repository;
 
-use App\Entity\RentAgent;
+use App\Entity\RentingAgent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<RentAgent>
+ * @extends ServiceEntityRepository<RentingAgent>
  */
 class RentingAgentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, RentAgent::class);
+        parent::__construct($registry, RentingAgent::class);
     }
 
     //    /**
