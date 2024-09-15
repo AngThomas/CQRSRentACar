@@ -18,5 +18,6 @@ class CarOfferAvailabilityHandler
     {
         $carOfferSearchDTO = $checkAvailabilityQuery->getCarOfferSearchDTO();
         $this->rentingScheduleRepository->getCarOffer($carOfferSearchDTO);
+        return true;
     }
 }
