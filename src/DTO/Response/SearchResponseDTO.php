@@ -10,7 +10,7 @@ class SearchResponseDTO
      * @param CarOfferResponseDTO[] $carOffers
      */
     public function __construct(
-        #[Serializer\Type('array<'.CarOfferResponseDTO::class.'>'), Serializer\Since('0.1')]
+        #[Serializer\SerializedName('available_rentals'), Serializer\Type('array<'.CarOfferResponseDTO::class.'>'), Serializer\Since('0.1')]
         private array $carOffers
     ){}
 
