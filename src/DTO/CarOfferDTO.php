@@ -4,6 +4,7 @@ namespace App\DTO;
 
 
 use App\Entity\CarOffer;
+use App\VO\MoneyVO;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CarOfferDTO
@@ -15,9 +16,10 @@ class CarOfferDTO
         private ?float $engine = null,
         private ?int $yearOfProduction = null,
         private ?string $description = null,
+        private ?string $licensePlate = null,
         private ?int $rentingAgentId = null,
-        private ?int $listingBasePrice = null,
-        private ?array $imagePath = [],
+        private ?MoneyVO $priceVo = null,
+        private ?string $imagePath = null,
         private ?array $files = []
     )
     {
@@ -89,6 +91,17 @@ class CarOfferDTO
         return $this;
     }
 
+    public function getLicensePlate(): ?string
+    {
+        return $this->licensePlate;
+    }
+
+    public function setLicensePlate(?string $licensePlate): self
+    {
+        $this->licensePlate = $licensePlate;
+        return $this;
+    }
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -111,16 +124,17 @@ class CarOfferDTO
         return $this;
     }
 
-    public function getListingBasePrice(): ?int
+    public function getPriceVo(): ?MoneyVO
     {
-        return $this->listingBasePrice;
+        return $this->priceVo;
     }
 
-    public function setListingBasePrice(?int $listingBasePrice): self
+    public function setPriceVo(?MoneyVO $priceVo): CarOfferDTO
     {
-        $this->listingBasePrice = $listingBasePrice;
+        $this->priceVo = $priceVo;
         return $this;
     }
+
 
     /**
      * @return UploadedFile[]|null

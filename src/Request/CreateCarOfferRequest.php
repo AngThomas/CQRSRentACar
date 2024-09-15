@@ -2,6 +2,7 @@
 
 namespace App\Request;
 
+use App\Enum\Currency;
 use Symfony\Component\Validator\Constraints as Assert;
 class CreateCarOfferRequest
 {
@@ -54,6 +55,14 @@ class CreateCarOfferRequest
             maxMessage: "Description cannot be longer than {{ limit }} characters"
         )]
         private string $description,
+        #[Assert\NotBlank(message: "License plate cannot be blank")]
+        #[Assert\Length(
+            min: 2,
+            max: 15,
+            minMessage: "License plate must be at least {{ limit }} characters long",
+            maxMessage: "License plate cannot be longer than {{ limit }} characters"
+        )]
+        private string $licensePlate,
         #[Assert\NotBlank(message: "Renting agent ID cannot be blank")]
         #[Assert\Type(type: 'integer', message: "Renting agent ID must be an integer")]
         #[Assert\Range(
@@ -69,7 +78,9 @@ class CreateCarOfferRequest
             min: 200,
             max: 6000
         )]
-        private int $listingBasePrice,
+        private int $price,
+        #[Assert\NotBlank(message: "Listing currency cannot be blank")]
+        private Currency $currency,
     ){}
 
     public function getMake(): string
@@ -122,6 +133,18 @@ class CreateCarOfferRequest
         $this->yearOfProduction = $yearOfProduction;
     }
 
+    public function getLicensePlate(): string
+    {
+        return $this->licensePlate;
+    }
+
+    public function setLicensePlate(string $licensePlate): self
+    {
+        $this->licensePlate = $licensePlate;
+        return $this;
+    }
+
+
     public function getDescription(): string
     {
         return $this->description;
@@ -142,14 +165,25 @@ class CreateCarOfferRequest
         $this->rentingAgentId = $rentingAgentId;
     }
 
-    public function getListingBasePrice(): int
+    public function getPrice(): int
     {
-        return $this->listingBasePrice;
+        return $this->price;
     }
 
-    public function setListingBasePrice(int $listingBasePrice): void
+    public function setPrice(int $price): void
     {
-        $this->listingBasePrice = $listingBasePrice;
+        $this->price = $price;
+    }
+
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(Currency $currency): CreateCarOfferRequest
+    {
+        $this->currency = $currency;
+        return $this;
     }
 
 

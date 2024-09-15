@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\CarOfferSearchDTO;
 use App\Entity\CarOfferListing;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,15 +21,15 @@ class CarOfferListingRepository extends ServiceEntityRepository
     /**
      * @return CarOfferListing[]
      */
-    public function getAvailableCarOffers(RentingAvailabilityDTO $dto): array
+    public function getAvailableCarOffers(CarOfferSearchDTO $dto): array
     {
-        return $this->createQueryBuilder('col')
-            ->join('col.carOffer', 'co')
-            ->leftJoin('co.rentingSchedules', 'rs')
+        return $this->createQueryBuilder('co')
+            ->leftJoin('co.rentingSchedule', 'rs')
+            ->addSelect('co')
             ->where('rs.id IS NULL')
-            ->orWhere('rs.dateTo < :dateFrom')
-            ->orWhere('rs.dateFrom < :dateTo')
-            ->orWhere('rs.dateTo > :dateTo')
+            ->orWhere('rs.rentedTo < :dateFrom')
+            ->orWhere('rs.rentedFrom < :dateTo')
+            ->orWhere('rs.rentedTo > :dateTo')
             ->setParameter('dateFrom', $dto->getDateFrom())
             ->setParameter('dateTo', $dto->getDateTo())
             ->getQuery()

@@ -19,21 +19,15 @@ class RentingAgent
     private int $id;
 
     /**
-     * @var Collection<int, CarOfferListing>
+     * @var Collection<int, CarOffer>
      */
-    #[ORM\OneToMany(targetEntity: CarOfferListing::class, mappedBy: 'createdBy', orphanRemoval: true)]
-    private Collection $carOfferListings;
-
-    /**
-     * @var Collection<int, RentingSchedule>
-     */
-    #[ORM\OneToMany(targetEntity: RentingSchedule::class, mappedBy: 'rentingAgent', orphanRemoval: true)]
-    private Collection $rentingSchedule;
+    #[ORM\OneToMany(targetEntity: CarOffer::class, mappedBy: 'rentingAgent', orphanRemoval: true)]
+    private Collection $carOffer;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable', generated: 'INSERT')]
     private DateTimeInterface $createdAt;
     public function __construct(
-        #[ORM\Column(length: 255)]
+        #[ORM\Column(length: 255, unique: true)]
         private string $email,
         #[ORM\Column(length: 255)]
         private string $name,
@@ -46,8 +40,6 @@ class RentingAgent
     )
     {
         $this->createdAt = new DateTimeImmutable();
-        $this->carOfferListings = new ArrayCollection();
-        $this->rentingSchedule = new ArrayCollection();
     }
     public function getId(): int
     {
@@ -126,61 +118,20 @@ class RentingAgent
         return $this;
     }
 
-    /**
-     * @return Collection<int, CarOfferListing>
-     */
-    public function getCarOfferListings(): Collection
-    {
-        return $this->carOfferListings;
-    }
-
-    public function addCarOfferListing(CarOfferListing $carOfferListing): static
-    {
-        if (!$this->carOfferListings->contains($carOfferListing)) {
-            $this->carOfferListings->add($carOfferListing);
-            $carOfferListing->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCarOfferListing(CarOfferListing $carOfferListing): static
-    {
-        if ($this->carOfferListings->removeElement($carOfferListing)) {
-            // set the owning side to null (unless already changed)
-            if ($carOfferListing->getCreatedBy() === $this) {
-                $carOfferListing->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
-     * @return Collection<int, RentingSchedule>
+     * @return Collection<int, CarOffer>
      */
-    public function getRentingSchedule(): Collection
+    public function getCarOffer(): Collection
     {
-        return $this->rentingSchedule;
+        return $this->carOffer;
     }
 
-    public function addRentingSchedule(RentingSchedule $rentingSchedule): static
+    public function addCarOffer(CarOffer $carOffer): static
     {
-        if (!$this->rentingSchedule->contains($rentingSchedule)) {
-            $this->rentingSchedule->add($rentingSchedule);
-            $rentingSchedule->setRentingAgent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRentingSchedule(RentingSchedule $rentingSchedule): static
-    {
-        if ($this->rentingSchedule->removeElement($rentingSchedule)) {
-            // set the owning side to null (unless already changed)
-            if ($rentingSchedule->getRentingAgent() === $this) {
-                $rentingSchedule->setRentingAgent(null);
-            }
+        if (!$this->carOffer->contains($carOffer)) {
+            $this->carOffer->add($carOffer);
+            $carOffer->setRentingAgent($this);
         }
 
         return $this;

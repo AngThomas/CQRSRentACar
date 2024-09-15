@@ -5,7 +5,7 @@ namespace App\Command\Create;
 
 use App\DTO\CarOfferDTO;
 
-class AddCarOfferCommand
+class CreateCarOfferCommand
 {
     public function __construct
     (

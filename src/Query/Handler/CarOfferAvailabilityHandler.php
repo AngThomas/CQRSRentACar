@@ -3,6 +3,7 @@
 namespace App\Query\Handler;
 
 
+use App\Query\CheckAvailabilityQuery;
 use App\Repository\RentingScheduleRepository;
 use RentingAvailabilityQuery;
 
@@ -13,9 +14,9 @@ class CarOfferAvailabilityHandler
     )
     {
     }
-    public function handle(RentingAvailabilityQuery $carOfferAvailabilityQuery): bool
+    public function handle(CheckAvailabilityQuery $checkAvailabilityQuery): bool
     {
-        $availabilityDTO = $carOfferAvailabilityQuery->getRentingAvailabilityDTO();
-        $this->rentingScheduleRepository->getCarOffer($availabilityDTO);
+        $carOfferSearchDTO = $checkAvailabilityQuery->getCarOfferSearchDTO();
+        $this->rentingScheduleRepository->getCarOffer($carOfferSearchDTO);
     }
 }

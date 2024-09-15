@@ -18,14 +18,15 @@ class CarOffer
     #[ORM\Column]
     private int $id;
 
-    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'offer')]
-    private ?CarOfferListing $carOfferListing = null;
-
     /**
      * @var Collection<int, RentingSchedule>
      */
-    #[ORM\OneToMany(targetEntity: RentingSchedule::class, mappedBy: 'offer', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: RentingSchedule::class, mappedBy: 'carOffer', orphanRemoval: true)]
     private Collection $rentingSchedule;
+
+    #[ORM\ManyToOne(inversedBy: 'rentingSchedule')]
+    #[ORM\JoinColumn(nullable: false)]
+    private RentingAgent $rentingAgent;
 
     #[ORM\Column(name: 'created_at', type: 'datetime_immutable', generated: 'INSERT')]
     private DateTimeInterface $createdAt;
@@ -45,9 +46,14 @@ class CarOffer
         private int $yearOfProduction,
         #[ORM\Column]
         private string $description,
+        #[ORM\Column(length: 15, unique: true)]
+        private string $licensePlate,
+        #[ORM\Column]
+        private int $price,
+        #[ORM\Column]
+        private string $currency,
         #[ORM\Column(name: 'image_path', length: 255)]
         private string $imagePath,
-
     )
     {
         $this->createdAt = new DateTimeImmutable();
@@ -132,6 +138,38 @@ class CarOffer
         return $this;
     }
 
+    public function getLicensePlate(): string
+    {
+        return $this->licensePlate;
+    }
+
+    public function setLicensePlate(string $licensePlate): self
+    {
+        $this->licensePlate = $licensePlate;
+        return $this;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): void
+    {
+        $this->price = $price;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(string $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+
     public function getImagePath(): string
     {
         return $this->imagePath;
@@ -166,18 +204,16 @@ class CarOffer
         $this->updatedAt = $updatedAt;
     }
 
-
-    public function getCarOfferListing(): ?CarOfferListing
+    public function getRentingAgent(): RentingAgent
     {
-        return $this->carOfferListing;
+        return $this->rentingAgent;
     }
 
-    public function setCarOfferListing(?CarOfferListing $carOfferListing): static
+    public function setRentingAgent(RentingAgent $rentingAgent): void
     {
-        $this->carOfferListing = $carOfferListing;
-
-        return $this;
+        $this->rentingAgent = $rentingAgent;
     }
+
 
     /**
      * @return Collection<int, RentingSchedule>
@@ -191,7 +227,7 @@ class CarOffer
     {
         if (!$this->rentingSchedule->contains($rentingSchedule)) {
             $this->rentingSchedule->add($rentingSchedule);
-            $rentingSchedule->setOffer($this);
+            $rentingSchedule->setCarOffer($this);
         }
 
         return $this;
@@ -201,8 +237,8 @@ class CarOffer
     {
         if ($this->rentingSchedule->removeElement($rentingSchedule)) {
             // set the owning side to null (unless already changed)
-            if ($rentingSchedule->getOffer() === $this) {
-                $rentingSchedule->setOffer(null);
+            if ($rentingSchedule->getCarOffer() === $this) {
+                $rentingSchedule->setCarOffer(null);
             }
         }
 

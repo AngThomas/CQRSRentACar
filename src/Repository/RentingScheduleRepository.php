@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\DTO\CarOfferSearchDTO;
 use App\Entity\RentingSchedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,15 +17,15 @@ class RentingScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, RentingSchedule::class);
     }
 
-    public function findByIdAndDates(AvailabilityDTO $dto): ?RentingSchedule
+    public function findByIdAndDates(CarOfferSearchDTO $dto): ?RentingSchedule
     {
         return $this->createQueryBuilder('rs')
             ->where('rs.carOffer = :carOfferId')
-            ->andWhere('rs.date >= :dateFrom')
-            ->andWhere('rs.date <= :dateTo')
+            ->andWhere('rs.rentedTo >= :dateFrom')
+            ->andWhere('rs.rentedFrom <= :dateTo')
             ->setParameter('carOfferId', $dto->getCarOfferId())
-            ->setParameter('dateFrom', $dto->getDateFrom())
-            ->setParameter('dateTo', $dto->getDateTo())
+            ->setParameter('rentedFrom', $dto->getRentedFrom())
+            ->setParameter('rentedTo', $dto->getRentedTo())
             ->getQuery()
             ->getOneOrNullResult();
 

@@ -34,6 +34,7 @@ class RentingAgentMapper
     public static function toNewEntity(RentingAgentDTO $rentingAgentDTO): RentingAgent
     {
         return new RentingAgent(
+            email: $rentingAgentDTO->getEmail(),
             name: $rentingAgentDTO->getName(),
             surname: $rentingAgentDTO->getSurname(),
             phoneNumber: $rentingAgentDTO->getPhoneNumber(),

@@ -2,7 +2,7 @@
 
 namespace App\Command\Handler\Create;
 
-use App\Command\Create\AddCarOfferCommand;
+use App\Command\Create\CreateCarOfferCommand;
 use App\Service\CarOfferSaver;
 use App\Service\FileServices\DirectoryManager;
 use App\Service\FileServices\PhotosManager;
@@ -21,11 +21,11 @@ readonly class CreateCarOfferHandler
     {
     }
 
-    public function handle(AddCarOfferCommand $addCarOfferCommand): ?int
+    public function handle(CreateCarOfferCommand $createCarOfferCommand): ?int
     {
-        $addCarOfferDTO = $addCarOfferCommand->getCarOffer();
+        $carOfferDTO = $createCarOfferCommand->getCarOffer();
         $photoUploadPath = $this->directoryManager->makeNewPhotoDirectory();
-        $this->photosManager->uploadAll($addCarOfferDTO->getFiles(), $photoUploadPath);
-        return $this->carOfferSaver->save($addCarOfferDTO);
+        $this->photosManager->uploadAll($carOfferDTO->getFiles(), $photoUploadPath);
+        return $this->carOfferSaver->save($carOfferDTO);
     }
 }

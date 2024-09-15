@@ -3,11 +3,11 @@
 namespace App\Mapper;
 
 use App\DTO\CarOfferDTO;
+use App\DTO\Response\CarOfferResponseDTO;
 use App\Entity\CarOffer;
 use App\Request\CreateCarOfferRequest;
-use App\Request\UpdateRentingAgentRequest;
-use App\DTO\RentingAgentDTO;
-use App\Entity\RentingAgent;
+
+use App\VO\MoneyVO;
 
 class CarOfferMapper
 {
@@ -20,8 +20,12 @@ class CarOfferMapper
             engine: $createCarOfferRequest->getEngine(),
             yearOfProduction: $createCarOfferRequest->getYearOfProduction(),
             description: $createCarOfferRequest->getDescription(),
+            licensePlate: $createCarOfferRequest->getLicensePlate(),
             rentingAgentId: $createCarOfferRequest->getRentingAgentId(),
-            listingBasePrice: $createCarOfferRequest->getListingBasePrice()
+            priceVo: new MoneyVO(
+                amount: $createCarOfferRequest->getPrice(),
+                currency: $createCarOfferRequest->getCurrency()
+            )
         );
     }
 
@@ -34,7 +38,25 @@ class CarOfferMapper
             engine: $carOfferDTO->getEngine(),
             yearOfProduction: $carOfferDTO->getYearOfProduction(),
             description: $carOfferDTO->getDescription(),
+            licensePlate: $carOfferDTO->getLicensePlate(),
+            price: $carOfferDTO->getPriceVo()->getAmount(),
+            currency: $carOfferDTO->getPriceVo()->getCurrency()->value,
             imagePath: ''
         );
     }
+
+    public static function toResponseDTO(CarOffer $carOffer): CarOfferResponseDTO
+    {
+        return new CarOfferResponseDTO(
+            id: $carOffer->getId(),
+            make: $carOffer->getMake(),
+            model: $carOffer->getModel(),
+            horsePower: $carOffer->getHorsePower(),
+            engine: $carOffer->getEngine(),
+            description: $carOffer->getDescription(),
+            price: $carOffer->getPrice(),
+            currency: $carOffer->getCurrency()
+        );
+    }
+
 }

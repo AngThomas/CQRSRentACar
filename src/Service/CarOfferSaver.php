@@ -29,10 +29,7 @@ readonly class CarOfferSaver
         }
 
         $carOffer = CarOfferMapper::toNewEntity($carOfferDTO);
-        $carOfferListing = new CarOfferListing($carOfferDTO->getListingBasePrice());
-        $carOfferListing->setCreatedBy($rentingAgent);
-
-        $carOffer->setCarOfferListing($carOfferListing);
+        $carOffer->setRentingAgent($rentingAgent);
 
         $this->entityManager->persist($carOffer);
         $this->entityManager->flush();
