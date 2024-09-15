@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\CarOfferRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarOfferRepository::class)]
+#[ORM\Table(name: 'car_offer')]
 class CarOffer
 {
     #[ORM\Id]
@@ -16,7 +18,7 @@ class CarOffer
     #[ORM\Column]
     private int $id;
 
-    #[ORM\ManyToOne(inversedBy: 'offer')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'offer')]
     private ?CarOfferListing $carOfferListing = null;
 
     /**
@@ -25,8 +27,11 @@ class CarOffer
     #[ORM\OneToMany(targetEntity: RentingSchedule::class, mappedBy: 'offer', orphanRemoval: true)]
     private Collection $rentingSchedule;
 
-    #[ORM\Column(name: 'created_at', type: 'datetime', generated: 'INSERT')]
+    #[ORM\Column(name: 'created_at', type: 'datetime_immutable', generated: 'INSERT')]
     private DateTimeInterface $createdAt;
+
+    #[ORM\Column(name: 'updated_at', type: 'datetime_immutable', generated: 'ALWAYS')]
+    private DateTimeInterface $updatedAt;
     public function __construct(
         #[ORM\Column(length: 100)]
         private string $make,
@@ -45,6 +50,8 @@ class CarOffer
 
     )
     {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
         $this->rentingSchedule = new ArrayCollection();
     }
 
@@ -148,6 +155,17 @@ class CarOffer
 
         return $this;
     }
+
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(DateTimeInterface $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
 
     public function getCarOfferListing(): ?CarOfferListing
     {

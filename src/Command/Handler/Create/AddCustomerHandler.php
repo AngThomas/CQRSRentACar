@@ -1,8 +1,8 @@
 <?php
 
-namespace Handler\Create;
+namespace App\Command\Handler\Create;
 
-use Create\AddCustomerCommand;
+use App\Command\Create\AddCustomerCommand;
 
 readonly class AddCustomerHandler extends AbstractAddHandler
 {

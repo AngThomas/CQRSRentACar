@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RentingScheduleRepository::class)]
+#[ORM\Table(name: 'renting_schedule')]
 class RentingSchedule
 {
     #[ORM\Id]
@@ -19,9 +20,9 @@ class RentingSchedule
     private CarOffer $offer;
 
     public function __construct(
-    #[ORM\Column]
+    #[ORM\Column(name: 'rented_from')]
     private DateTimeInterface $rentedFrom,
-    #[ORM\Column]
+    #[ORM\Column(name: 'rented_to')]
     private DateTimeInterface $rentedTo
     )
     {}

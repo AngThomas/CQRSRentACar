@@ -16,6 +16,19 @@ class RentingScheduleRepository extends ServiceEntityRepository
         parent::__construct($registry, RentingSchedule::class);
     }
 
+    public function findByIdAndDates(AvailabilityDTO $dto): ?RentingSchedule
+    {
+        return $this->createQueryBuilder('rs')
+            ->where('rs.carOffer = :carOfferId')
+            ->andWhere('rs.date >= :dateFrom')
+            ->andWhere('rs.date <= :dateTo')
+            ->setParameter('carOfferId', $dto->getCarOfferId())
+            ->setParameter('dateFrom', $dto->getDateFrom())
+            ->setParameter('dateTo', $dto->getDateTo())
+            ->getQuery()
+            ->getOneOrNullResult();
+
+    }
     //    /**
     //     * @return RentingSchedule[] Returns an array of RentingSchedule objects
     //     */

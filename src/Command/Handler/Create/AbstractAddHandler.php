@@ -1,6 +1,6 @@
 <?php
 
-namespace Handler\Create;
+namespace App\Command\Handler\Create;
 
 use Doctrine\ORM\EntityManagerInterface;
 

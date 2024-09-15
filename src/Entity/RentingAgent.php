@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\RentingAgentRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RentingAgentRepository::class)]
+#[ORM\Table(name: 'renting_agent')]
 class RentingAgent
 {
     #[ORM\Id]
@@ -28,7 +30,11 @@ class RentingAgent
     #[ORM\OneToMany(targetEntity: RentingSchedule::class, mappedBy: 'rentingAgent', orphanRemoval: true)]
     private Collection $rentingSchedule;
 
+    #[ORM\Column(name: 'created_at', type: 'datetime_immutable', generated: 'INSERT')]
+    private DateTimeInterface $createdAt;
     public function __construct(
+        #[ORM\Column(length: 255)]
+        private string $email,
         #[ORM\Column(length: 255)]
         private string $name,
         #[ORM\Column(length: 255, nullable: false)]
@@ -37,9 +43,9 @@ class RentingAgent
         private string $phoneNumber,
         #[ORM\Column]
         private int $points,
-        #[ORM\Column(type: 'datetime')]
-        private DateTimeInterface $created)
+    )
     {
+        $this->createdAt = new DateTimeImmutable();
         $this->carOfferListings = new ArrayCollection();
         $this->rentingSchedule = new ArrayCollection();
     }
@@ -47,6 +53,18 @@ class RentingAgent
     {
         return $this->id;
     }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
 
     public function getName(): string
     {
@@ -96,14 +114,14 @@ class RentingAgent
         return $this;
     }
 
-    public function getCreated(): DateTimeInterface
+    public function getCreatedAt(): DateTimeImmutable
     {
-        return $this->created;
+        return $this->createdAt;
     }
 
-    public function setCreated(DateTimeInterface $created): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
 
         return $this;
     }

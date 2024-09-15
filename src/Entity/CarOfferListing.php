@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarOfferListingRepository::class)]
+#[ORM\Table(name: 'car_offer_listing')]
 class CarOfferListing
 {
     #[ORM\Id]
@@ -18,7 +19,7 @@ class CarOfferListing
     /**
      * @var Collection<int, CarOffer>
      */
-    #[ORM\OneToMany(targetEntity: CarOffer::class, mappedBy: 'carOfferListing')]
+    #[ORM\OneToMany(targetEntity: CarOffer::class, mappedBy: 'carOfferListing', cascade:['persist'] )]
     private Collection $offer;
 
     #[ORM\ManyToOne(inversedBy: 'carOfferListings')]
@@ -26,7 +27,7 @@ class CarOfferListing
     private RentingAgent $createdBy;
 
     public function __construct(
-        #[ORM\Column]
+        #[ORM\Column(name: 'base_price')]
         private int $basePrice
     )
     {

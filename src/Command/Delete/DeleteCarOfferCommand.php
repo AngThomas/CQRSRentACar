@@ -1,6 +1,6 @@
 <?php
 
-namespace Delete;
+namespace App\Command\Delete;
 
 class DeleteCarOfferCommand
 {

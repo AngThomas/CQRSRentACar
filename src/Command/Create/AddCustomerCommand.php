@@ -1,6 +1,6 @@
 <?php
 
-namespace Create;
+namespace App\Command\Create;
 
 use CustomerDTO;
 
