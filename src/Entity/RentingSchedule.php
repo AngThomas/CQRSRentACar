@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RentingScheduleRepository::class)]
+#[ORM\Table(name: 'renting_schedule')]
 class RentingSchedule
 {
     #[ORM\Id]
@@ -16,19 +17,15 @@ class RentingSchedule
 
     #[ORM\ManyToOne(inversedBy: 'rentingSchedule')]
     #[ORM\JoinColumn(nullable: false)]
-    private CarOffer $offer;
+    private CarOffer $carOffer;
 
     public function __construct(
-    #[ORM\Column]
+    #[ORM\Column(name: 'rented_from')]
     private DateTimeInterface $rentedFrom,
-    #[ORM\Column]
+    #[ORM\Column(name: 'rented_to')]
     private DateTimeInterface $rentedTo
     )
     {}
-
-    #[ORM\ManyToOne(inversedBy: 'rentingSchedule')]
-    #[ORM\JoinColumn(nullable: false)]
-    private RentingAgent $rentingAgent;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -39,14 +36,14 @@ class RentingSchedule
         return $this->id;
     }
 
-    public function getOffer(): CarOffer
+    public function getCarOffer(): CarOffer
     {
-        return $this->offer;
+        return $this->carOffer;
     }
 
-    public function setOffer(CarOffer $offer): self
+    public function setCarOffer(CarOffer $carOffer): self
     {
-        $this->offer = $offer;
+        $this->carOffer = $carOffer;
 
         return $this;
     }

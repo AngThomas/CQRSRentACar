@@ -1,9 +1,11 @@
 <?php
 
-namespace Create;
-use RentingAgentDTO;
+namespace App\Command\Create;
 
-class AddRentingAgentCommand
+
+use App\DTO\RentingAgentDTO;
+
+class CreateRentingAgentCommand
 {
     public function __construct(
         private RentingAgentDTO $rentingAgent

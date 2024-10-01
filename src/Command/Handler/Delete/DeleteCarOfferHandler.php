@@ -1,12 +1,14 @@
 <?php
 
-namespace Handler\Delete;
+namespace App\Command\Handler\Delete;
 
+use App\Command\Delete\DeleteCarOfferCommand;
 use App\Repository\CarOfferRepository;
-use Delete\DeleteCarOfferCommand;
+
+
 use Doctrine\ORM\EntityManagerInterface;
 
-readonly class DeleteCarOfferHandler extends AbstractDeleteHandler
+readonly class DeleteCarOfferHandler
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

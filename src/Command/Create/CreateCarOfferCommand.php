@@ -1,13 +1,15 @@
 <?php
 
-namespace Create;
-use CarOfferDTO;
+namespace App\Command\Create;
 
-class AddCarOfferCommand
+
+use App\DTO\CarOfferDTO;
+
+class CreateCarOfferCommand
 {
     public function __construct
     (
-        private CarOfferDTO $carOffer
+        private CarOfferDTO $carOffer,
     )
     {
     }

@@ -1,46 +1,29 @@
 <?php
 
-namespace App\Entity;
+namespace App\DTO\Update;
 
-use App\Repository\CustomerRepository;
-use DateTimeInterface;
-use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Customer;
 
-#[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+class AddCustomerDTO
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private int $id;
-
     public function __construct(
-        #[ORM\Column(length: 100)]
         private string $email,
-        #[ORM\Column(length: 100)]
         private string $name,
-        #[ORM\Column(length: 100)]
         private string $surname,
-        #[ORM\Column]
         private int $age,
     )
-    {}
+    {
+    }
 
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): Customer
+    public function setEmail(string $email): self
     {
         $this->email = $email;
         return $this;
-    }
-
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function getName(): string
@@ -51,7 +34,6 @@ class Customer
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -63,7 +45,6 @@ class Customer
     public function setSurname(string $surname): self
     {
         $this->surname = $surname;
-
         return $this;
     }
 
@@ -75,8 +56,16 @@ class Customer
     public function setAge(int $age): self
     {
         $this->age = $age;
-
         return $this;
     }
 
+    public function toEntity(): Customer
+    {
+        return new Customer(
+            email: $this->email,
+            name: $this->name,
+            surname: $this->surname,
+            age: $this->age
+        );
+    }
 }

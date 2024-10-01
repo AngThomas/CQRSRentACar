@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\RentingAgentRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RentingAgentRepository::class)]
+#[ORM\Table(name: 'renting_agent')]
 class RentingAgent
 {
     #[ORM\Id]
@@ -17,18 +19,16 @@ class RentingAgent
     private int $id;
 
     /**
-     * @var Collection<int, CarOfferListing>
+     * @var Collection<int, CarOffer>
      */
-    #[ORM\OneToMany(targetEntity: CarOfferListing::class, mappedBy: 'createdBy', orphanRemoval: true)]
-    private Collection $carOfferListings;
+    #[ORM\OneToMany(targetEntity: CarOffer::class, mappedBy: 'rentingAgent', orphanRemoval: true)]
+    private Collection $carOffer;
 
-    /**
-     * @var Collection<int, RentingSchedule>
-     */
-    #[ORM\OneToMany(targetEntity: RentingSchedule::class, mappedBy: 'rentingAgent', orphanRemoval: true)]
-    private Collection $rentingSchedule;
-
+    #[ORM\Column(name: 'created_at', type: 'datetime_immutable', generated: 'INSERT')]
+    private DateTimeInterface $createdAt;
     public function __construct(
+        #[ORM\Column(length: 255, unique: true)]
+        private string $email,
         #[ORM\Column(length: 255)]
         private string $name,
         #[ORM\Column(length: 255, nullable: false)]
@@ -37,16 +37,26 @@ class RentingAgent
         private string $phoneNumber,
         #[ORM\Column]
         private int $points,
-        #[ORM\Column(type: 'datetime')]
-        private DateTimeInterface $created)
+    )
     {
-        $this->carOfferListings = new ArrayCollection();
-        $this->rentingSchedule = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
     }
     public function getId(): int
     {
         return $this->id;
     }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+        return $this;
+    }
+
 
     public function getName(): string
     {
@@ -96,73 +106,32 @@ class RentingAgent
         return $this;
     }
 
-    public function getCreated(): DateTimeInterface
+    public function getCreatedAt(): DateTimeImmutable
     {
-        return $this->created;
+        return $this->createdAt;
     }
 
-    public function setCreated(DateTimeInterface $created): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
+
 
     /**
-     * @return Collection<int, CarOfferListing>
+     * @return Collection<int, CarOffer>
      */
-    public function getCarOfferListings(): Collection
+    public function getCarOffer(): Collection
     {
-        return $this->carOfferListings;
+        return $this->carOffer;
     }
 
-    public function addCarOfferListing(CarOfferListing $carOfferListing): static
+    public function addCarOffer(CarOffer $carOffer): static
     {
-        if (!$this->carOfferListings->contains($carOfferListing)) {
-            $this->carOfferListings->add($carOfferListing);
-            $carOfferListing->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCarOfferListing(CarOfferListing $carOfferListing): static
-    {
-        if ($this->carOfferListings->removeElement($carOfferListing)) {
-            // set the owning side to null (unless already changed)
-            if ($carOfferListing->getCreatedBy() === $this) {
-                $carOfferListing->setCreatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, RentingSchedule>
-     */
-    public function getRentingSchedule(): Collection
-    {
-        return $this->rentingSchedule;
-    }
-
-    public function addRentingSchedule(RentingSchedule $rentingSchedule): static
-    {
-        if (!$this->rentingSchedule->contains($rentingSchedule)) {
-            $this->rentingSchedule->add($rentingSchedule);
-            $rentingSchedule->setRentingAgent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRentingSchedule(RentingSchedule $rentingSchedule): static
-    {
-        if ($this->rentingSchedule->removeElement($rentingSchedule)) {
-            // set the owning side to null (unless already changed)
-            if ($rentingSchedule->getRentingAgent() === $this) {
-                $rentingSchedule->setRentingAgent(null);
-            }
+        if (!$this->carOffer->contains($carOffer)) {
+            $this->carOffer->add($carOffer);
+            $carOffer->setRentingAgent($this);
         }
 
         return $this;
